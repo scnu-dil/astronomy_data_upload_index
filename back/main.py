@@ -9,6 +9,8 @@ cors = CORS(app)
 patch_request_class(app)  # set maximum file size, default is 16MB
 import pymysql
 import re
+import requests
+import ast
 
 def dict_list2sql(dict_data_list: list, sql: str):
     # 批量词典数据插入转 SQL 语句
@@ -28,6 +30,7 @@ def dict_list2sql(dict_data_list: list, sql: str):
 def insert2db(cursor, insert_data: list, base_sql: str):
     # SQL插入批量数据功能
     sql = dict_list2sql(insert_data, base_sql)
+    print(sql)
     # print(sql)
     # db = pymysql.connect(host="localhost",user="root", password="mysql", database="test")  # 链接数据库及表
     # cursor = db.cursor()  # 游标对象 cursor
@@ -71,9 +74,12 @@ def home():
         'status': 0
     }
     dict = json.loads(input_text)
-    result = dict["params"]['input']
+    # result = dict["params"]['input']
+    result = dict['params']
     for i in range(0, len(result)):  # 去除最后一个无用字段 show
         del result[i]['show']
+        result[i]['tsHash'] = "5cecf95dabd55747f18c5c6d7f2"
+    print(result)
     for r_ in result:  # 判断输入数据是否为空
         for r in r_:
             if r_[r] == '':
@@ -92,6 +98,14 @@ def home():
         else:
             db.rollback()  # SQL插入失败
         db.close()
+
+    # put_url = 'http://47.113.185.200/upload/AABCC01010'
+    # mapA = {}
+    # header_dict = {"Content-Type": "application/json; charset=utf8"}
+    # str = json.dumps(mapA)
+    # r = requests.put(put_url, data=str, headers=header_dict)
+    # r = r.text
+    # print(eval(r))
 
     return jsonify(response)  # 返回SQL插入数据状态
 

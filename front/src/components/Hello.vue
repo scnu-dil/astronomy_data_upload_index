@@ -1,7 +1,8 @@
 <template> 
 <div class="test">
   <el-card class="educationExperienceTable">
-  <span class="cardHeader">天文数据</span>
+    <!-- <span class="cardHeader" style="display:block;color:blue;font-weight:bold;text-align:center;font-size:35px" >基于区块链的恒星元素丰度数据智能共享平台</span> -->
+  <span class="cardHeader" style="display:block;color:blue;font-weight:bold;text-align:center;font-size:35px">基于区块链的恒星元素丰度数据智能共享平台</span>
     <el-table :data="educationExperience"
               stripe
               border>
@@ -77,7 +78,24 @@
           </div>
         </template>
       </el-table-column>
-	  
+	  <el-table-column label="Organization" width="136px">
+        <template slot-scope="scope">
+          <div class="educationExperienceDiv">
+            <el-input v-model="scope.row.Organization"
+                      placeholder="华师大">
+            </el-input>
+          </div>
+        </template>
+      </el-table-column>
+	  <el-table-column label="Authors" width="136px">
+        <template slot-scope="scope">
+          <div class="educationExperienceDiv">
+            <el-input v-model="scope.row.Authors"
+                      placeholder="作者">
+            </el-input>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="操作"
                         width="136px">
         <template slot-scope="scope">
@@ -106,7 +124,11 @@
 			<el-col >
 				<div class="grid-content bg-purple-light">
 					<el-table :data="ShowData" style="width: 100%;height: 450px; overflow-y: scroll;" >
-						<el-table-column prop="id" label="序号" width="136px"></el-table-column>
+						<el-table-column prop="id" label="Accepted Time" width="136px">
+							<template slot-scope="scope">
+									<p>{{ scope.row.data_time}}</p>
+							</template>
+						</el-table-column>
 						<!-- <el-table-column prop="id" label="Element" width="136px" v-for="(Element, index) in ShowData"> -->
 						<el-table-column prop="id" label="Element" width="136px">
 							<template slot-scope="scope">
@@ -149,6 +171,21 @@
 								<p>{{ scope.row.C_loge }}</p>
 							</template>
 						</el-table-column>
+						<el-table-column prop="beizhu" label="Organization" width="136px">
+							<template slot-scope="scope">
+								<p>{{ scope.row.Organization }}</p>
+							</template>
+						</el-table-column>
+						<el-table-column prop="beizhu" label="Authors" width="136px">
+							<template slot-scope="scope">
+								<p>{{ scope.row.Authors }}</p>
+							</template>
+						</el-table-column>
+						<el-table-column prop="beizhu" label="tsHash" width="136px">
+							<template slot-scope="scope">
+								<p>{{ scope.row.tshash }}</p>
+							</template>
+						</el-table-column>
 						<el-table-column prop="beizhu1" label="操作" width="136px">
 							<template slot-scope="scope">
 								<el-button type="primary" @click="update(scope.row,scope.$index)">修改</el-button>
@@ -162,30 +199,17 @@
 			<el-button type="primary" name="submit" @click="showDataFresh" round>刷新数据</el-button>
 	</el-row>
   </el-card>
-  
-
-  <!-- <textarea type="text" class="from_input" placeholder="结果显示" readonly="readonly">oo</textarea> -->
-<!-- <span style="margin-left: 10px">tttt</span> -->
-      <!-- const from_input = { -->
-        <!-- Element: '1', -->
-        <!-- N_line: '2', -->
-        <!-- O_XH: '3', -->
-        <!-- O_XFe: '4', -->
-        <!-- O_loge: '5', -->
-        <!-- C_XH: '6', -->
-		<!-- C_XFe: '7', -->
-		<!-- C_loge: '8', -->
-      <!-- }; -->
 </div>
 </template>
 
 <script>
 import axios from 'axios';
-import qs from 'qs';
+import config from '@/config.js';
 
 export default {
-
+  
   data() {
+	var time_temp = new Date();
     return {
       // 教育经历
       educationExperience: [{
@@ -205,8 +229,12 @@ export default {
 		C_XFe: '',
 		// C_loge
 		C_loge: '',
-        // 是否显示新增按钮
+		// 是否显示新增按钮
         show: 'true',
+		// 单位机构
+		Organization: '',
+		Authors: '',
+		date_time: time_temp
       }],
 	  ShowData:[{
         Element: '',
@@ -217,20 +245,27 @@ export default {
         C_XH: '',
 		C_XFe: '',
 		C_loge: '',
-	  }]
+		// 交易hash
+		Organization: '',
+	    tshash: '5cecf95dabd55747f18c5c6d7f2',
+		Authors: '',
+		date_time: '',
+	  }],
+
     };
+	
   },
   //mounted(){  # 每次刷新后自动执行一次
   //  this.onSubmit()
   //},
+
   methods: {
     onSubmit (index) {
 	  const table = this.educationExperience
 	  console.log(table)
-	  const path = 'http://172.24.234.84:5000/put';  // 输入数据对应地址
 	  const list = this.educationExperience
-      axios.post(path,
-      {params: {input: table}})
+      axios.post(`${config.HOST}/put`,
+      {params: table})
         .then(response => {
 		if (response.data.status === 1){
 		  this.$notify.success({
@@ -239,24 +274,16 @@ export default {
 		  });
 		  list.splice(0, list.length);
 			list.push({
-				// 元素
 				Element: '',
-				// N_line
 				N_line: '',
-				// O_XH
 				O_XH: '',
-				// O_XFe
 				O_XFe: '',
-				// O_loge
 				O_loge: '',
-				// C_XH
 				C_XH: '',
-				// C_XFe
 				C_XFe: '',
-				// C_loge
 				C_loge: '',
-				// 是否显示新增按钮
 				show: 'true',
+				Organization: '',
 			  });
 		}
 		else{
@@ -270,73 +297,11 @@ export default {
         .catch(error => {
           console.log(error)
         })
-
     },
-    // 添加新的教育经历
-    pushNewEducation(index) {
-      const list = this.educationExperience;
-      list[index].show = 'false';
-      list.push({
-        // 元素
-        Element: '',
-        // N_line
-        N_line: '',
-        // O_XH
-        O_XH: '',
-        // O_XFe
-        O_XFe: '',
-        // O_loge
-        O_loge: '',
-        // C_XH
-        C_XH: '',
-		// C_XFe
-		C_XFe: '',
-		// C_loge
-		C_loge: '',
-        // 是否显示新增按钮
-        show: 'true',
-      });
-    this.educationExperience = list;
-    },
-    // 删除教育经历
-    deleteEducation(index) {
-      const list = this.educationExperience;
-      if (index === 0 && list.length === 1) {
-        list.splice(index, 1);
-        list.push({
-			// 元素
-			Element: '',
-			// N_line
-			N_line: '',
-			// O_XH
-			O_XH: '',
-			// O_XFe
-			O_XFe: '',
-			// O_loge
-			O_loge: '',
-			// C_XH
-			C_XH: '',
-			// C_XFe
-			C_XFe: '',
-			// C_loge
-			C_loge: '',
-			// 是否显示新增按钮
-			show: 'true',
-        });
-      } else {
-        list.splice(index, 1);
-      }
-      if (index === list.length) {
-        list[index - 1].show = 'true';
-      }
-//      list = this.educationExperience;
-    },
-	
-    showDataFresh() {
+	showDataFresh() {
       const list = this.ShowData;
 	  list.splice(0, list.length)  // 每次刷新清空缓存数据
-	  const path = 'http://172.24.234.84:5000/get';  // 后台链接地址
-	  axios.get(path)
+	  axios.get(`${config.HOST}/get`)
         .then(response => {
 			this.from_input = response.data.back_data
 			this.index = response.data.data_len
@@ -352,6 +317,52 @@ export default {
 	  
     this.ShowData = list;
     },
+    // 添加新的教育经历
+    pushNewEducation(index) {
+      const list = this.educationExperience;
+      list[index].show = 'false';
+	  var d=new Date();
+      list.push({
+        Element: '',
+        N_line: '',
+        O_XH: '',
+        O_XFe: '',
+        O_loge: '',
+        C_XH: '',
+		C_XFe: '',
+		C_loge: '',
+        show: 'true',
+		Organization: '',
+		date_time: "2020年6月4日17:21:45",
+      });
+    this.educationExperience = list;
+    },
+    // 删除教育经历
+    deleteEducation(index) {
+      const list = this.educationExperience;
+      if (index === 0 && list.length === 1) {
+        list.splice(index, 1)
+        list.push({
+			Element: '',
+			N_line: '',
+			O_XH: '',
+			O_XFe: '',
+			O_loge: '',
+			C_XH: '',
+			C_XFe: '',
+			C_loge: '',
+			show: 'true',
+			Organization: '',
+        });
+      } else {
+        list.splice(index, 1);
+      }
+      if (index === list.length) {
+        list[index - 1].show = 'true';
+      }
+    },
+	
+
   },
 };
 </script>
