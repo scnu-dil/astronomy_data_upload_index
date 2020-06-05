@@ -10,7 +10,26 @@ patch_request_class(app)  # set maximum file size, default is 16MB
 import pymysql
 import re
 import requests
-import ast
+
+def return_hash_list(element: str, input_element, header_dict={"Content-Type": "application/json; charset=utf8"}
+                     ):
+    url = 'http://47.113.185.200/astronomy/upload/{}'.format(element)
+    mapA = {
+        "item_N_line": "1",
+        "item_O_XH": "2",
+        "item_O_XFe": "3",
+        "item_O_loge": "31",
+        "item_C_XH": "2",
+        "item_C_XFe": "1",
+        "item_C_loge": "2",
+    }
+    for (k1,v1),(k2,v2) in zip(mapA.items(), input_element.items()):  # 天文源数据导入区块链
+        mapA[k1] = v2
+    str = json.dumps(mapA)
+    # print("str:", str)
+    # print(element)
+    r = requests.put(url, data=str, headers=header_dict)
+    return eval(r.text)['tsHash']
 
 def dict_list2sql(dict_data_list: list, sql: str):
     # 批量词典数据插入转 SQL 语句
@@ -71,21 +90,32 @@ def home():
     flag = 1
     input_text = request.get_data()  # 获取前端的json格式数据
     response = {
-        'status': 0
+        'status': 0  # 传输数据状态  1为成功
     }
-    dict = json.loads(input_text)
+    import copy
+    # dict = json.loads(input_text)
     # result = dict["params"]['input']
-    result = dict['params']
+    element_list = []  # 用于获取所有输入element所对应的hash值
+    result = json.loads(input_text)['params']
+    back_result = copy.deepcopy(result)  # 备份，作用于传入区块链的数据匹配
     for i in range(0, len(result)):  # 去除最后一个无用字段 show
         del result[i]['show']
-        result[i]['tsHash'] = "5cecf95dabd55747f18c5c6d7f2"
-    print(result)
+        del back_result[i]['Element']  # 为了匹配传入区块链的数据格式
+        # result[i]['tsHash'] = "5cecf95dabd55747f18c5c6d7f2"
+        element_list.append(result[i]['Element'])
     for r_ in result:  # 判断输入数据是否为空
         for r in r_:
             if r_[r] == '':
                 response['status'] = 0
                 flag = 0  # 为空，不执行SQL插入语句
                 break
+
+    for e, r_e, re in zip(element_list, back_result, result):
+        r_temp = {"tsHash": ''}
+        r = return_hash_list(e, r_e)
+        r_temp['tsHash'] = r
+        re.update(r_temp)  # 交易hash值合并入传输数据
+
     if flag:
         db_table = "aa"
         base_sql = """insert into {} values %s;""".format(db_table)  # 指定SQL命令
@@ -98,14 +128,6 @@ def home():
         else:
             db.rollback()  # SQL插入失败
         db.close()
-
-    # put_url = 'http://47.113.185.200/upload/AABCC01010'
-    # mapA = {}
-    # header_dict = {"Content-Type": "application/json; charset=utf8"}
-    # str = json.dumps(mapA)
-    # r = requests.put(put_url, data=str, headers=header_dict)
-    # r = r.text
-    # print(eval(r))
 
     return jsonify(response)  # 返回SQL插入数据状态
 

@@ -96,6 +96,15 @@
           </div>
         </template>
       </el-table-column>
+	  <el-table-column label="Paper" width="136px">
+        <template slot-scope="scope">
+          <div class="educationExperienceDiv">
+            <el-input v-model="scope.row.Paper"
+                      placeholder="数据出处">
+            </el-input>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="操作"
                         width="136px">
         <template slot-scope="scope">
@@ -186,6 +195,11 @@
 								<p>{{ scope.row.tshash }}</p>
 							</template>
 						</el-table-column>
+						<el-table-column prop="beizhu" label="Paper" width="136px">
+							<template slot-scope="scope">
+								<p>{{ scope.row.Paper }}</p>
+							</template>
+						</el-table-column>
 						<el-table-column prop="beizhu1" label="操作" width="136px">
 							<template slot-scope="scope">
 								<el-button type="primary" @click="update(scope.row,scope.$index)">修改</el-button>
@@ -207,8 +221,7 @@ import axios from 'axios';
 import config from '@/config.js';
 
 export default {
-  
-  data() {
+   data() {
 	var time_temp = new Date();
     return {
       // 教育经历
@@ -234,7 +247,8 @@ export default {
 		// 单位机构
 		Organization: '',
 		Authors: '',
-		date_time: time_temp
+		date_time: time_temp.getFullYear()+ '-' +time_temp.getMonth()+ '-' +time_temp.getDate(),
+		Paper: ''
       }],
 	  ShowData:[{
         Element: '',
@@ -250,6 +264,7 @@ export default {
 	    tshash: '5cecf95dabd55747f18c5c6d7f2',
 		Authors: '',
 		date_time: '',
+	    Paper: ''
 	  }],
 
     };
@@ -260,7 +275,9 @@ export default {
   //},
 
   methods: {
+	
     onSubmit (index) {
+	  var time = new Date();
 	  const table = this.educationExperience
 	  console.log(table)
 	  const list = this.educationExperience
@@ -284,6 +301,9 @@ export default {
 				C_loge: '',
 				show: 'true',
 				Organization: '',
+				Authors: '',
+				date_time: time.getFullYear()+ '-' +time.getMonth()+ '-' +time.getDate(),
+			    Paper: ''
 			  });
 		}
 		else{
@@ -297,7 +317,7 @@ export default {
         .catch(error => {
           console.log(error)
         })
-    },
+	},
 	showDataFresh() {
       const list = this.ShowData;
 	  list.splice(0, list.length)  // 每次刷新清空缓存数据
@@ -319,6 +339,7 @@ export default {
     },
     // 添加新的教育经历
     pushNewEducation(index) {
+      var time = new Date();
       const list = this.educationExperience;
       list[index].show = 'false';
 	  var d=new Date();
@@ -333,8 +354,9 @@ export default {
 		C_loge: '',
         show: 'true',
 		Organization: '',
-		date_time: "2020年6月4日17:21:45",
-      });
+		date_time: time.getFullYear()+ '-' +time.getMonth()+ '-' +time.getDate(),
+        Paper: ''
+	  });
     this.educationExperience = list;
     },
     // 删除教育经历
@@ -353,7 +375,8 @@ export default {
 			C_loge: '',
 			show: 'true',
 			Organization: '',
-        });
+			Paper: ''
+		});
       } else {
         list.splice(index, 1);
       }
