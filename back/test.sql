@@ -34,8 +34,8 @@ CREATE TABLE `aa` (
   `Organization` varchar(20) DEFAULT NULL,
   `Authors` varchar(30) DEFAULT NULL,
   `data_time` varchar(50) DEFAULT NULL,
-  `tshash` varchar(50) DEFAULT '',
-  `Paper` varchar(50) DEFAULT NULL
+  `Paper` varchar(50) DEFAULT NULL,
+  `tshash` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -48,4 +48,4 @@ CREATE TABLE `aa` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-06-05 13:31:04
+-- Dump completed on 2020-06-06  9:05:08
