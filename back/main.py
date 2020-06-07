@@ -10,6 +10,8 @@ patch_request_class(app)  # set maximum file size, default is 16MB
 import pymysql
 import re
 import requests
+import copy
+
 
 def return_hash_list(element: str, input_element, header_dict={"Content-Type": "application/json; charset=utf8"}
                      ):
@@ -92,7 +94,6 @@ def home():
     response = {
         'status': 0  # 传输数据状态  1为成功
     }
-    import copy
     # dict = json.loads(input_text)
     # result = dict["params"]['input']
     element_list = []  # 用于获取所有输入element所对应的hash值
@@ -110,13 +111,13 @@ def home():
                 flag = 0  # 为空，不执行SQL插入语句
                 break
 
-    for e, r_e, re in zip(element_list, back_result, result):
-        r_temp = {"tsHash": ''}
-        r = return_hash_list(e, r_e)
-        r_temp['tsHash'] = r
-        re.update(r_temp)  # 交易hash值合并入传输数据
-
     if flag:
+        for e, r_e, re in zip(element_list, back_result, result):
+            r_temp = {"tsHash": ''}
+            r = return_hash_list(e, r_e)
+            r_temp['tsHash'] = r
+            re.update(r_temp)  # 交易hash值合并入传输数据
+            
         db_table = "aa"
         base_sql = """insert into {} values %s;""".format(db_table)  # 指定SQL命令
         db = pymysql.connect(host="localhost",user="root", password="mysql", database="test")  # 链接数据库及表
@@ -147,6 +148,18 @@ def transfer_data():
         'data_len': len(from_db_data)
     }
     return jsonify(response)
+
+@app.route('/get_certificate', methods=['GET', 'POST', 'PUT'])
+def getCertificate():
+    input_hash = request.get_data()  # 获取前端的json格式数据
+    result = json.loads(input_hash)['params']
+    print(result)
+    response = {
+        'hash_certificate_title': 'This is the title',
+        'hash_certificate': "This is the certificate content from backward..."
+    }
+    return jsonify(response)
+
 
 if __name__ == '__main__':
     app.run()

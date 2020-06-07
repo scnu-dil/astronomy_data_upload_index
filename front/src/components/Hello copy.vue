@@ -1,32 +1,3 @@
-<!-- <template>
-  <pagination
-    :total="total"
-    :page.sync="listQuery.page"
-    :limit.sync="listQuery.limit"
-    @pagination="getList" />
-</template>
-
-<script>
-
-export default {
-  components: { Pagination },
-  data() {
-    return {
-      total: 100,
-      listQuery: {
-        page: 0,
-        limit: 20
-      }
-    }
-  },
-  methods: {
-    getList() {
-      // 获取数据
-      
-    }
-  }
-}
-</script> -->
 <template> 
   <div id='input_table_element'>
     <input_table></input_table>
@@ -44,7 +15,7 @@ export default {
 	name: 'input_table_element',
 	components: {
     input_table,  // 输入组件
-    show_table,  // 显示数据组件
+    show_table  // 显示数据组件
 	}
 };
 
