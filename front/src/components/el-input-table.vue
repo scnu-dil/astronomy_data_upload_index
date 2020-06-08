@@ -138,7 +138,10 @@ import config from '@/config.js';
 export default {
 
    data() {
-	var time_temp = new Date();
+    var time_temp = new Date();
+    var t_year = time_temp.getFullYear();
+    var t_month = time_temp.getMonth()+1;
+    var t_day = time_temp.getDate();
     return {
       // 教育经历
       educationExperience: [{
@@ -163,7 +166,7 @@ export default {
 		// 单位机构
 		Organization: '',
 		Authors: '',
-		date_time: time_temp.getFullYear()+ '-' +time_temp.getMonth()+ '-' +time_temp.getDate(),
+		date_time: t_year+ '-' +t_month+ '-' +t_day,
 		Paper: ''
       }],
     };
@@ -177,6 +180,10 @@ export default {
 	
     onSubmit (index) {
 	  var time = new Date();
+    var t_year = time.getFullYear();
+    var t_month = time.getMonth()+1;
+    var t_day = time.getDate();
+    
 	  const table = this.educationExperience
 	  console.log(table)
 	  const list = this.educationExperience
@@ -201,8 +208,8 @@ export default {
 				show: 'true',
 				Organization: '',
 				Authors: '',
-				date_time: time.getFullYear()+ '-' +time.getMonth()+ '-' +time.getDate(),
-			    Paper: ''
+				date_time: t_year + '-' + t_month + '-' + t_day,
+			  Paper: ''
 			  });
 		}
 		else{
@@ -221,9 +228,11 @@ export default {
     // 添加新的教育经历
     pushNewEducation(index) {
       var time = new Date();
+      var t_year = time.getFullYear();
+      var t_month = time.getMonth()+1;
+      var t_day = time.getDate();
       const list = this.educationExperience;
       list[index].show = 'false';
-	  var d=new Date();
       list.push({
         Element: '',
         N_line: '',
@@ -236,13 +245,17 @@ export default {
         show: 'true',
 		Organization: '',
 		Authors: '',
-		date_time: time.getFullYear()+ '-' +time.getMonth()+ '-' +time.getDate(),
+		date_time: t_year + '-' + t_month + '-' + t_day,
         Paper: ''
 	  });
     this.educationExperience = list;
     },
     // 删除教育经历
     deleteEducation(index) {
+      var time = new Date();
+      var t_year = time.getFullYear();
+      var t_month = time.getMonth()+1;
+      var t_day = time.getDate();
       const list = this.educationExperience;
       if (index === 0 && list.length === 1) {
         list.splice(index, 1)
@@ -257,7 +270,7 @@ export default {
 			C_loge: '',
 			show: 'true',
 			Organization: '',
-			date_time: time.getFullYear()+ '-' +time.getMonth()+ '-' +time.getDate(),
+			date_time: t_year + '-' + t_month + '-' + t_day,
 			Paper: ''
 		});
       } else {
