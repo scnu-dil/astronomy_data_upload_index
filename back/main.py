@@ -120,7 +120,7 @@ def home():
             
         db_table = "aa"
         base_sql = """insert into {} values %s;""".format(db_table)  # 指定SQL命令
-        db = pymysql.connect(host="localhost",user="root", password="mysql", database="test")  # 链接数据库及表
+        db = pymysql.connect(host="localhost",user="astronomy_admin", password="admin", database="test")  # 链接数据库及表
         cursor = db.cursor()  # 游标对象 cursor
         table_exists(cursor, db_table)  # 判断数据表是否存在
         if insert2db(cursor, insert_data=result, base_sql=base_sql):  # SQL插入命令
@@ -136,7 +136,7 @@ def home():
 def transfer_data():
     db_table = "aa"
     query_sql = """select * from {};""".format(db_table)  # 查询命令
-    db = pymysql.connect(host="localhost",user="root", password="mysql", database="test")  # 链接数据库及表
+    db = pymysql.connect(host="localhost",user="astronomy_admin", password="admin", database="test")  # 链接数据库及表
     cursor = db.cursor(cursor=pymysql.cursors.DictCursor)  # 字典格式获取数据
     table_exists(cursor, db_table)  # 判断数据表是否存在
     cursor.execute(query_sql)
@@ -162,5 +162,5 @@ def getCertificate():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port=8000)
 
