@@ -110,9 +110,9 @@
               <p class="information-title"
               style='width:350px;white-space:nowrap;
               text-overflow:ellipsis;overflow:hidden;'  
-              v-bind:title="copy_tsHash"
-              ref="copyButton" :data-clipboard-text="copy_tsHash">
-              <span style="color:rgb(0, 0, 0);font-size: 20px;">hash值为:</span> {{ copy_tsHash }}</p>
+              v-bind:title="certificate_content.blockHash"
+              ref="copyButton" :data-clipboard-text="certificate_content.blockHash">
+              <span style="color:rgb(0, 0, 0);font-size: 20px;">hash值为:</span> {{ certificate_content.blockHash }}</p>
               <p style="color:rgb(0, 0, 0);font-size: 20px;">特此证明</p>
         </Modal>
       </div>
