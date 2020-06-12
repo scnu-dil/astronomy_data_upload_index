@@ -7,7 +7,10 @@
                         <el-table :data="ShowData" style="width: 100%;height: 450px; overflow-y: scroll;" >
                             <el-table-column prop="id" label="Accepted Time" width="136px">
                                 <template slot-scope="scope">
-                                        <p>{{ scope.row.data_time}}</p>
+                                        <p style='width:100px;white-space:nowrap;
+                                        text-overflow:ellipsis;overflow:hidden;'
+                                        v-bind:title="scope.row.data_time">
+                                        {{ scope.row.data_time}}</p>
                                 </template>
                             </el-table-column>
                             <!-- <el-table-column prop="id" label="Element" width="136px" v-for="(Element, index) in ShowData"> -->
@@ -54,7 +57,10 @@
                             </el-table-column>
                             <el-table-column prop="beizhu" label="Organization" width="136px">
                                 <template slot-scope="scope">
-                                    <p>{{ scope.row.Organization }}</p>
+                                    <p style='width:100px;white-space:nowrap;
+                                    text-overflow:ellipsis;overflow:hidden;'
+                                    v-bind:title="scope.row.Organization">
+                                    {{ scope.row.Organization }}</p>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="beizhu" label="Authors" width="136px">
@@ -64,7 +70,10 @@
                             </el-table-column>
                             <el-table-column prop="beizhu" label="tsHash" width="136px">
                                 <template slot-scope="scope">
-                                    <p>{{ scope.row.tshash }}</p>
+                                    <p style='color:rgb(17, 2, 2);width:100px;white-space:nowrap;
+                                    text-overflow:ellipsis;overflow:hidden;'
+                                    v-bind:title="scope.row.tshash">
+                                    {{ scope.row.tshash }}</p>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="beizhu" label="Paper" width="136px">
