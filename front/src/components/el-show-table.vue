@@ -104,25 +104,29 @@
 
       <div>
         <Modal :show="show" :title="title" @hideModal="hideModal" @submit="submit">
-              <p>此条恒星元素数据由{{ data_offer }}</p>
-              <p>于{{ block_time }}提供</p>
+              <p style="color:rgb(0, 0, 0);font-size: 20px;">此条恒星元素数据由{{ data_offer }}</p>
+              <p style="color:rgb(0, 0, 0);font-size: 20px;">于{{ block_time }}提供</p>
               <!-- title 用 v-bind绑定属性功能 -->
-              <p style='color:rgb(120, 64, 224);width:350px;white-space:nowrap;
+              <p class="information-title"
+              style='width:350px;white-space:nowrap;
               text-overflow:ellipsis;overflow:hidden;'  
-              v-bind:title="certificate_content.blockHash">
-              hash值为: {{ certificate_content.blockHash }}</p>
-              <p>特此证明</p>
+              v-bind:title="copy_tsHash"
+              ref="copyButton" :data-clipboard-text="copy_tsHash">
+              <span style="color:rgb(0, 0, 0);font-size: 20px;">hash值为:</span> {{ copy_tsHash }}</p>
+              <p style="color:rgb(0, 0, 0);font-size: 20px;">特此证明</p>
         </Modal>
       </div>
-
     </div>
+
   </template>
     
     <script type="text/javascript">
     import axios from 'axios';
     import config from '@/config.js';
     import Modal from './alert_windows.vue';
-    import Pagination from './Pagination.vue'
+    import Pagination from './Pagination.vue';
+    import Clipboard from 'clipboard';
+
     // document.getElementById("title_unit").title = 111;
 
     // 截取过长字符串
@@ -155,6 +159,7 @@
        data() {
         var time_temp = new Date();
         return {
+          copy_tsHash: '',
           block_time: '',
           data_offer: '',
           ShowData:[{
@@ -206,10 +211,16 @@
             .catch(error => {
               console.log(error)
             })
-      },
-
-
+          this.initClipboard()
+      },           
       methods: {
+        initClipboard() {
+              const clipboard = new Clipboard(this.$refs.copyButton);
+              clipboard.on('success', (e) => {
+                console.log('复制成功!')});      
+              clipboard.on('error', (e) => {        
+                console.log('复制失败，请再次尝试')});
+        }, 
         // getList() {
         // // 获取数据
         //   const list = this.ShowData;
@@ -257,6 +268,7 @@
             this.certificate_content = response.data.hash_certificate
             this.block_time = response.data.tshash_time
             this.data_offer = response.data.offer
+            this.copy_tsHash = response.data.input_tsHash
           })
           .catch(error => {
             console.log(error)
@@ -303,5 +315,11 @@
       border: 1px solid #dcdfe6;
       border-radius: 100px;
       }
+    }
+    .information-title {
+      color: #19d3ea;
+      font-size: 18px;
+      cursor: pointer;  /*鼠标悬停变小手*/
+      width: 100%;
     }
     </style>
