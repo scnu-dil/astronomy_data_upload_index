@@ -161,7 +161,6 @@ def getCertificate():
     cursor.execute(query_sql)
     Certificate_info = cursor.fetchone()  # 获取多行数据
     # tshash_time = re.findall('(\'(.*?)\')', str(tshash_time))[0][1]
-    print(Certificate_info)
     tshash_time = Certificate_info[0]
     offer = Certificate_info[1] + "-" + Certificate_info[-1]
     print(offer)
@@ -177,7 +176,8 @@ def getCertificate():
         'hash_certificate_title': block_num,
         'hash_certificate': trans_info,
         'tshash_time': tshash_time,
-        'offer': offer
+        'offer': offer,
+        'input_tsHash': input_tsHash
     }
     return jsonify(response)
 
@@ -185,4 +185,4 @@ def getCertificate():
 if __name__ == '__main__':
     app.run(port=8000)
 
-# create_sql = create table astronomy_data ('Element': varchar(10), 'N_line': varchar(10), 'O_XH': varchar(10), 'O_XFe': varchar(10), 'O_loge': varchar(10), 'C_XH': varchar(10), 'C_XFe': varchar(10), 'C_loge': varchar(10), 'Organization': varchar(10), 'Authors': varchar(10), 'data_time': varchar(20), 'Paper': varchar(50), 'tshash': varchar(100), primary key ('tshash'));
+# create_sql = create table astronomy_data (Element varchar(10), N_line varchar(10), O_XH varchar(10), O_XFe varchar(10), O_loge varchar(10), C_XH varchar(10), C_XFe varchar(10), C_loge varchar(10), Organization varchar(50), Authors varchar(10), data_time varchar(20), Paper varchar(50), tshash varchar(100), primary key ('tshash'));
