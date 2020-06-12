@@ -95,15 +95,14 @@
 
       <div>
         <Modal :show="show" :title="title" @hideModal="hideModal" @submit="submit">
-              <p>block: {{ certificate_content.blockHash }}</p>
-              <p>from: {{ certificate_content.from }}</p>
-              <p>gas: {{ certificate_content.gas }}</p>
-              <p>gasPrice: {{ certificate_content.gasPrice }}</p>
-              <p style='color:rgb(120, 64, 224);width:480px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;'  v-bind:title="certificate_content.input">input: {{ certificate_content.input }}</p>
-              <p>nonce: {{ certificate_content.nonce }}</p>
-              <p>to: {{ certificate_content.to }}</p>
-              <p>transactionIndex: {{ certificate_content.transactionIndex }}</p>
-              <p>value: {{ certificate_content.value }}</p>
+              <p>此条恒星元素数据由{{ data_offer }}</p>
+              <p>于{{ block_time }}提供</p>
+              <!-- title 用 v-bind绑定属性功能 -->
+              <p style='color:rgb(120, 64, 224);width:350px;white-space:nowrap;
+              text-overflow:ellipsis;overflow:hidden;'  
+              v-bind:title="certificate_content.blockHash">
+              hash值为: {{ certificate_content.blockHash }}</p>
+              <p>特此证明</p>
         </Modal>
       </div>
 
@@ -126,18 +125,10 @@
       var s = ""; 
       for(var i = 0;i < str.length; i++) { 
         s = s + str.charAt(i); 
-        // if (str.charCodeAt(i) > 128) { 
-        //   strlen = strlen + 2; 
-        //   if(strlen >= len){ 
-        //     return s.substring(0,s.length-1) + "..."; 
-        //   } 
-        // } else { 
         strlen = strlen + 1; 
         if(strlen >= len){ 
-          // return s.substring(0,s.length-2) + "..."; 
           s = s.substring(0,s.length-2) + "..."; 
           break;
-        // } 
         } 
       } 
       for (var i = str.length-len; i < str.length; i++){
@@ -145,6 +136,7 @@
       }
       return s; 
     } 
+
     export default {
       components: {
           Modal,
@@ -154,7 +146,8 @@
        data() {
         var time_temp = new Date();
         return {
-          
+          block_time: '',
+          data_offer: '',
           ShowData:[{
             Element: '',
             N_line: '',
@@ -170,7 +163,7 @@
             date_time: '',
             Paper: ''
           }],
-          title: '',
+          title: '证书信息',
           show: false,
           certificate_content: {},
           total: 30,  // 总条目数
@@ -251,11 +244,10 @@
           this.show = true  
           axios.put(`${config.HOST}/get_certificate`, {params: hash_data})
           .then(response => {
-            this.title = response.data.hash_certificate_title
+            // this.title = response.data.hash_certificate_title
             this.certificate_content = response.data.hash_certificate
-            // eval(this.certificate_content)
-            // console.log(cutString(this.certificate_content.input, 100)) 
-            // this.certificate_content.input = cutString(this.certificate_content.input, 30) 
+            this.block_time = response.data.tshash_time
+            this.data_offer = response.data.offer
           })
           .catch(error => {
             console.log(error)

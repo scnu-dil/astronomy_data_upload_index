@@ -106,11 +106,10 @@ def home():
             r_temp['tsHash'] = r
             re.update(r_temp)  # 交易hash值合并入传输数据
             
-        db_table = "aa"
-        base_sql = """insert into {} values %s;""".format(db_table)  # 指定SQL命令
+        base_sql = """insert into {} values %s;""".format(app.config['TABLE'])  # 指定SQL命令
         db = pymysql.connect(host=app.config['HOST'],user=app.config['USER'], password=app.config['PASSWORD'], database=app.config['DATABASE'])  # 链接数据库及表
         cursor = db.cursor()  # 游标对象 cursor
-        table_exists(cursor, db_table)  # 判断数据表是否存在
+        table_exists(cursor, db_table=app.config['TABLE'])  # 判断数据表是否存在
         if insert2db(cursor, insert_data=result, base_sql=base_sql):  # SQL插入命令
             db.commit()
             response['status'] = 1  # SQL插入成功
@@ -122,15 +121,13 @@ def home():
 
 @app.route('/get', methods=['GET', 'POST'])
 def transfer_data():
-    db_table = "aa"
-    query_sql = """select * from {};""".format(db_table)  # 查询命令
+    query_sql = """select * from {};""".format(app.config['TABLE'])  # 查询命令
     db = pymysql.connect(host=app.config['HOST'],user=app.config['USER'], password=app.config['PASSWORD'], database=app.config['DATABASE'])  # 链接数据库及表
     cursor = db.cursor(cursor=pymysql.cursors.DictCursor)  # 字典格式获取数据
-    table_exists(cursor, db_table)  # 判断数据表是否存在
+    table_exists(cursor, db_table=app.config['TABLE'])  # 判断数据表是否存在
     cursor.execute(query_sql)
     from_db_data = cursor.fetchall()  # 获取多行数据
     print(from_db_data)
-    # from_db_data = [{'Element': '1', 'N_line': '2', 'O_XH': '3', 'O_XFe': '4', 'O_loge': '5', 'C_XH': '6', 'C_XFe': '7', 'C_loge': '8'}]
     response = {
         'back_data': from_db_data,
         'data_len': len(from_db_data)
@@ -157,10 +154,30 @@ def getCertificate():
     del trans_info['blockNumber']
     del trans_info['hash']
     print(trans_info)
+    db = pymysql.connect(host=app.config['HOST'], user=app.config['USER'], password=app.config['PASSWORD'],
+                         database=app.config['DATABASE'])  # 链接数据库及表
+    cursor = db.cursor()  # 游标对象 cursor
+    query_sql = """ select data_time, Organization, Authors  from astronomy_data where tshash='{}'""".format(input_tsHash)
+    cursor.execute(query_sql)
+    Certificate_info = cursor.fetchone()  # 获取多行数据
+    # tshash_time = re.findall('(\'(.*?)\')', str(tshash_time))[0][1]
+    print(Certificate_info)
+    tshash_time = Certificate_info[0]
+    offer = Certificate_info[1] + "-" + Certificate_info[-1]
+    print(offer)
+    db.close()
+    # if insert2db(cursor, insert_data=result, base_sql=base_sql):  # SQL插入命令
+    #     db.commit()
+    # else:
+    #     db.rollback()  # SQL插入失败
+    # db.close()
+
     # re.sub(r'\'', '\"', trans_info)
     response = {
         'hash_certificate_title': block_num,
-        'hash_certificate': trans_info
+        'hash_certificate': trans_info,
+        'tshash_time': tshash_time,
+        'offer': offer
     }
     return jsonify(response)
 
@@ -168,3 +185,4 @@ def getCertificate():
 if __name__ == '__main__':
     app.run(port=8000)
 
+# create_sql = create table astronomy_data ('Element': varchar(10), 'N_line': varchar(10), 'O_XH': varchar(10), 'O_XFe': varchar(10), 'O_loge': varchar(10), 'C_XH': varchar(10), 'C_XFe': varchar(10), 'C_loge': varchar(10), 'Organization': varchar(10), 'Authors': varchar(10), 'data_time': varchar(20), 'Paper': varchar(50), 'tshash': varchar(100), primary key ('tshash'));
