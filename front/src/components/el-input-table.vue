@@ -142,6 +142,10 @@ export default {
     var t_year = time_temp.getFullYear();
     var t_month = time_temp.getMonth()+1;
     var t_day = time_temp.getDate();
+    var t_h = time_temp.getHours();
+    var t_m = time_temp.getMinutes();
+    var t_s = time_temp.getSeconds();
+
     return {
       // 教育经历
       educationExperience: [{
@@ -166,7 +170,7 @@ export default {
 		// 单位机构
 		Organization: '',
 		Authors: '',
-		date_time: t_year+ '-' +t_month+ '-' +t_day,
+		date_time: t_year+ '-' +t_month+ '-' +t_day  + ' ' + t_h + ':' + t_m + ':' + t_s,
 		Paper: ''
       }],
     };
@@ -183,10 +187,13 @@ export default {
     var t_year = time.getFullYear();
     var t_month = time.getMonth()+1;
     var t_day = time.getDate();
-    
+    var t_h = time.getHours();
+    var t_m = time.getMinutes();
+    var t_s = time.getSeconds();
+
 	  const table = this.educationExperience
 	  console.log(table)
-	  const list = this.educationExperience
+    const list = this.educationExperience
       axios.post(`${config.HOST}/put`,
       {params: table})
         .then(response => {
@@ -208,7 +215,7 @@ export default {
 				show: 'true',
 				Organization: '',
 				Authors: '',
-				date_time: t_year + '-' + t_month + '-' + t_day,
+				date_time: t_year + '-' + t_month + '-' + t_day + ' ' + t_h + ':' + t_m + ':' + t_s,
 			  Paper: ''
 			  });
 		}
@@ -240,12 +247,12 @@ export default {
         O_XFe: '',
         O_loge: '',
         C_XH: '',
-		C_XFe: '',
-		C_loge: '',
+        C_XFe: '',
+        C_loge: '',
         show: 'true',
-		Organization: '',
-		Authors: '',
-		date_time: t_year + '-' + t_month + '-' + t_day,
+        Organization: '',
+        Authors: '',
+        date_time: t_year + '-' + t_month + '-' + t_day,
         Paper: ''
 	  });
     this.educationExperience = list;
