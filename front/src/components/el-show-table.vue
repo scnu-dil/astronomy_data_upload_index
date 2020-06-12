@@ -84,11 +84,11 @@
                 </el-col>
 
                 <el-button type="primary" name="submit" @click="showDataFresh" round>刷新数据</el-button>
-                <pagination
+                <!-- <pagination
                 :total="total"
                 :page.sync="listQuery.page"
                 :limit.sync="listQuery.limit"
-                @pagination="getList" />
+                @pagination="getList" /> -->
         </el-row>
 
       </el-card>
@@ -172,7 +172,7 @@
             limit: 5  // 每页限制条目数
           },
           from_input: '',
-          index: 0,
+          // index: 0,
           current_index: 0,
           temp_showData: [],  // 缓存变量。存储后台传回的数据
         };
@@ -201,20 +201,20 @@
 
 
       methods: {
-        getList() {
-        // 获取数据
-          const list = this.ShowData;
-          this.total = this.index;
-          var temp_index = this.listQuery.limit;
-          console.log("getList");
-          for (var i=0; i<this.index; i++){
-                list.push(this.temp_showData[i]);
-              };
-        },
+        // getList() {
+        // // 获取数据
+        //   const list = this.ShowData;
+        //   this.total = this.index;
+        //   var temp_index = this.listQuery.limit;
+        //   console.log("getList");
+        //   for (var i=0; i<this.index; i++){
+        //         list.push(this.temp_showData[i]);
+        //       };
+        // },
 
         showDataFresh() {
           // const list = this.ShowData;
-          const temp_list = this.temp_showData;  
+          const temp_list = this.ShowData;  
           temp_list.splice(0, temp_list.length)  // 每次刷新清空缓存数据
           axios.get(`${config.HOST}/get`)
             .then((response) => {
