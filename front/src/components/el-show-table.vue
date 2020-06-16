@@ -193,7 +193,7 @@
 
       },
       mounted(){  //每次刷新后自动执行一次
-          const temp_list = this.temp_showData;  
+          const temp_list = this.ShowData;  
           temp_list.splice(0, temp_list.length)  // 每次刷新清空缓存数据
           axios.get(`${config.HOST}/get`)
             .then((response) => {
@@ -203,10 +203,10 @@
                 for (var i=0; i<this.index; i++){
                   temp_list.push(this.from_input[i]);
                 };
-                const list = this.ShowData;
-                for (var i=0; i<this.index; i++){
-                list.push(this.temp_showData[i]);
-                };
+                // const list = this.ShowData;
+                // for (var i=0; i<this.index; i++){
+                // list.push(this.temp_showData[i]);
+                // };
             })
             .catch(error => {
               console.log(error)
